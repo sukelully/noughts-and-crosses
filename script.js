@@ -1,5 +1,5 @@
 const Gameboard = (function() {
-    const boardSize = 1;
+    const boardSize = 9;
     const board = Array(boardSize).fill(null);
 
     return { boardSize, board };
@@ -8,24 +8,49 @@ const Gameboard = (function() {
 const GameController = (function() {
     // Check if board is full
     const boardIsFull = () => {
-        if (Gameboard.board.every(el => typeof el === 'string')) {
+        if (Gameboard.board.every(item => typeof item === 'string')) {
             return true;
         }
         return false;
     };
 
-    return { boardIsFull };
+    // Check whose turn it is to play
+    const takeTurn = () => {
+        const count = Gameboard.board.filter(item => item !== null).length;
+
+        if (count % 2 === 0) {
+            playerX.playMove(0);
+        } else {
+            playerO.playMove(1);
+        }
+    }
+
+    return { boardIsFull, takeTurn };
 })();
 
 function createPlayer(player) {
     const symbol = player;
 
-    const playMove = (index) => {
-        if (index > Gameboard.boardSize) {
-            console.error('ERROR: Tried to play a move at an index larger than the size of the board.')
+    const prompt = require('prompt-sync')();
+
+    // Get index input and place on board
+    const playMove = () => {
+        const index = parseInt(prompt(`Player ${symbol}, enter your move (0-8): `), 10);
+
+        // Validate input
+        if (isNaN(index) || index < 0 || index > Gameboard.boardSize) {
+            console.error('Invalid input. Please enter a number between 0 and 8.')
             return;
         }
+
+        if (Gameboard.board[index] !== null) {
+            console.error('Cell already occupied. Choose a different cell.');
+            return;
+        }
+
         Gameboard.board[index] = symbol;
+        console.log(`Player ${symbol} placed at index ${index}`);
+        console.log(Gameboard.board);
     }
 
     return { playMove }
@@ -34,8 +59,6 @@ function createPlayer(player) {
 const playerX = createPlayer('X');
 const playerO = createPlayer('O');
 
-playerX.playMove(0);
-playerO.playMove(3);
-
-console.log(GameController.boardIsFull());
-console.log(Gameboard.board);
+while (!GameController.boardIsFull()) {
+    GameController.takeTurn();
+} 
