@@ -19,13 +19,35 @@ const GameController = (function() {
         const count = Gameboard.board.filter(item => item !== null).length;
 
         if (count % 2 === 0) {
+            gameIsWon(playerX.symbol)
             playerX.playMove(0);
         } else {
+            gameIsWon(playerO.symbol);
             playerO.playMove(1);
         }
     }
 
-    return { boardIsFull, takeTurn };
+    const gameIsWon = (symbol) => {
+        const winConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ]
+
+        for (const condition of winConditions) {
+            if (condition.every(item => item === symbol)) {
+                console.log(`Player ${symbol} has won the game!`)
+                return true;
+            }
+        }
+    }
+
+    return { boardIsFull, takeTurn, gameIsWon };
 })();
 
 function createPlayer(player) {
