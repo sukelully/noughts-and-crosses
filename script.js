@@ -1,7 +1,17 @@
-const prompt = require('prompt-sync')();
+// const prompt = require('prompt-sync')();
+
+const boardDiv = document.getElementById('gameboard');
+const boardSize = 9;
+
+
+for (let i = 0; i < boardSize; i++) {
+    const btn = document.createElement('button');
+    btn.classList.add('cell');
+    btn.dataset.index = i;
+    boardDiv.appendChild(btn);
+}
 
 const Gameboard = (function () {
-    const boardSize = 9;
     const board = Array(boardSize).fill(null);
 
     const displayBoard = () => {
@@ -49,7 +59,7 @@ const GameController = (function () {
 function createPlayer(symbol) {
     const playMove = () => {
         while (true) {
-            const index = parseInt(prompt(`Player ${symbol}, enter your move (0-8): `), 10);
+            // const index = parseInt(prompt(`Player ${symbol}, enter your move (0-8): `), 10);
 
             if (isNaN(index) || index < 0 || index >= Gameboard.boardSize) {
                 console.error('Invalid input. Please enter a number between 0 and 8.');

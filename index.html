@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <script src="script.js"></script>
+  <main>
+    <header>
+      <h1>Tic-Tac-Toe</h1>
+    </header>
+
+    <section aria-label="Game status" id="status" role="status">
+      <p>Player X's turn</p>
+    </section>
+
+    <section aria-label="Game board">
+      <div class="board" id="gameboard">
+        
+      </div>
+    </section>
+
+    <footer>
+      <button id="restart">Restart Game</button>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
