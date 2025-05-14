@@ -6,6 +6,9 @@ for (let i = 0; i < boardSize; i++) {
     const btn = document.createElement('button');
     btn.classList.add('cell');
     btn.dataset.index = i;
+    btn.addEventListener('click', () => {
+        console.log(btn.dataset.index);
+    });
     boardDiv.appendChild(btn);
 }
 
@@ -57,7 +60,10 @@ const GameController = (function () {
 function createPlayer(symbol) {
     const playMove = () => {
         while (true) {
-            // const index = parseInt(prompt(`Player ${symbol}, enter your move (0-8): `), 10);
+            // let index;
+            // for (const btn of boardDiv.childNodes) {
+            //     btn.addEventListener('click', () => index = btn.dataset.index)
+            // }
 
             if (isNaN(index) || index < 0 || index >= Gameboard.boardSize) {
                 console.error('Invalid input. Please enter a number between 0 and 8.');
