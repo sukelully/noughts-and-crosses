@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tic-Tac-Toe</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <main>
-    <header>
-      <h1>Tic-Tac-Toe</h1>
-    </header>
+    <main>
+        <header>
+            <h1>Tic-Tac-Toe</h1>
+        </header>
 
-    <section aria-label="Game status" id="status" role="status">
-      <p>Player X's turn</p>
-    </section>
+        <section aria-label="Game status" id="status" role="status">
+            <p>Player X's turn</p>
+        </section>
 
-    <section aria-label="Game board">
-      <div class="board" id="gameboard">
-        
-      </div>
-    </section>
+        <section aria-label="Game board">
+            <div id="board-container">
+                <div id="board-highlight"></div>
+                <div class="board" id="gameboard"></div>
+            </div>
+        </section>
 
-    <footer>
-      <button id="restart">Restart Game</button>
-    </footer>
-  </main>
+        <footer>
+            <button id="restart">Restart Game</button>
+        </footer>
+    </main>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

@@ -1,9 +1,7 @@
-// const prompt = require('prompt-sync')();
-
-const boardDiv = document.getElementById('gameboard');
 const boardSize = 9;
+const boardDiv = document.getElementById('gameboard');
 
-
+// Setup grid
 for (let i = 0; i < boardSize; i++) {
     const btn = document.createElement('button');
     btn.classList.add('cell');
