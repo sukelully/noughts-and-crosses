@@ -1,31 +1,26 @@
-const Gameboard = (function() {
+const prompt = require('prompt-sync')();
+
+const Gameboard = (function () {
     const boardSize = 9;
     const board = Array(boardSize).fill(null);
 
-    return { boardSize, board };
-})();
-
-const GameController = (function() {
-    // Check if board is full
-    const boardIsFull = () => {
-        if (Gameboard.board.every(item => typeof item === 'string')) {
-            return true;
+    const displayBoard = () => {
+        let display = '';
+        for (let i = 0; i < board.length; i++) {
+            display += board[i] || '-';
+            if ((i + 1) % 3 === 0) display += '\n';
+            else display += ' ';
         }
-        return false;
+        console.log(display);
     };
 
-    // Check whose turn it is to play
-    const takeTurn = () => {
-        const count = Gameboard.board.filter(item => item !== null).length;
+    return { boardSize, board, displayBoard };
+})();
 
-        if (count % 2 === 0) {
-            gameIsWon(playerX.symbol)
-            playerX.playMove(0);
-        } else {
-            gameIsWon(playerO.symbol);
-            playerO.playMove(1);
-        }
-    }
+const GameController = (function () {
+    const boardIsFull = () => {
+        return Gameboard.board.every(item => typeof item === 'string');
+    };
 
     const gameIsWon = (symbol) => {
         const winConditions = [
@@ -37,50 +32,63 @@ const GameController = (function() {
             [2, 5, 8],
             [0, 4, 8],
             [2, 4, 6]
-        ]
+        ];
 
         for (const condition of winConditions) {
-            if (condition.every(item => item === symbol)) {
-                console.log(`Player ${symbol} has won the game!`)
+            if (condition.every(index => Gameboard.board[index] === symbol)) {
+                console.log(`\nPlayer ${symbol} has won the game!`);
                 return true;
             }
         }
-    }
+        return false;
+    };
 
-    return { boardIsFull, takeTurn, gameIsWon };
+    return { boardIsFull, gameIsWon };
 })();
 
-function createPlayer(player) {
-    const symbol = player;
-
-    const prompt = require('prompt-sync')();
-
-    // Get index input and place on board
+function createPlayer(symbol) {
     const playMove = () => {
-        const index = parseInt(prompt(`Player ${symbol}, enter your move (0-8): `), 10);
+        while (true) {
+            const index = parseInt(prompt(`Player ${symbol}, enter your move (0-8): `), 10);
 
-        // Validate input
-        if (isNaN(index) || index < 0 || index > Gameboard.boardSize) {
-            console.error('Invalid input. Please enter a number between 0 and 8.')
-            return;
+            if (isNaN(index) || index < 0 || index >= Gameboard.boardSize) {
+                console.error('Invalid input. Please enter a number between 0 and 8.');
+                continue;
+            }
+
+            if (Gameboard.board[index] !== null) {
+                console.error('Cell already occupied. Choose a different cell.');
+                continue;
+            }
+
+            Gameboard.board[index] = symbol;
+            Gameboard.displayBoard();
+            break;
         }
+    };
 
-        if (Gameboard.board[index] !== null) {
-            console.error('Cell already occupied. Choose a different cell.');
-            return;
-        }
-
-        Gameboard.board[index] = symbol;
-        console.log(`Player ${symbol} placed at index ${index}`);
-        console.log(Gameboard.board);
-    }
-
-    return { playMove }
+    return { symbol, playMove };
 }
 
 const playerX = createPlayer('X');
 const playerO = createPlayer('O');
 
-while (!GameController.boardIsFull()) {
-    GameController.takeTurn();
-} 
+// Game loop
+console.log('Welcome to Tic-Tac-Toe!\n');
+Gameboard.displayBoard();
+
+while (true) {
+    playerX.playMove();
+    if (GameController.gameIsWon(playerX.symbol)) break;
+    if (GameController.boardIsFull()) {
+        console.log('\nIt\'s a draw!');
+        break;
+    }
+
+    playerO.playMove();
+    if (GameController.gameIsWon(playerO.symbol)) break;
+    if (GameController.boardIsFull()) {
+        console.log('\nIt\'s a draw!');
+        break;
+    }
+}
