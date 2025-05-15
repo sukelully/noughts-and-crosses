@@ -13,7 +13,7 @@ const Gameboard = (function () {
         });
         boardDiv.appendChild(btn);
     }
-    
+
     // Display board in console
     const displayBoard = () => {
         let display = '';
@@ -31,7 +31,7 @@ const Gameboard = (function () {
             Gameboard.board[index] = symbol;
             Gameboard.displayBoard();
         };
-    
+
         return { symbol, playMove };
     }
 
@@ -39,9 +39,11 @@ const Gameboard = (function () {
 })();
 
 const GameController = (function () {
+    let gameOver = false;
     const turnStatusIndicator = document.getElementById('turn-status');
 
     const boardIsFull = () => {
+        gameOver = true;
         return Gameboard.board.every(item => typeof item === 'string');
     };
 
@@ -60,6 +62,7 @@ const GameController = (function () {
         for (const condition of winConditions) {
             if (condition.every(index => Gameboard.board[index] === symbol)) {
                 console.log(`\nPlayer ${symbol} has won the game!`);
+                gameOver = true;
                 return true;
             }
         }
@@ -69,18 +72,40 @@ const GameController = (function () {
     const takeTurn = (index, btn) => {
         const count = Gameboard.board.filter(item => item !== null).length;
 
+        if (Gameboard.board[index] !== null) {
+            console.error('Invalid choice: Cell is already occupied.');
+            return;
+        }
+
+        if (gameOver) {
+            return;
+        }
+
         if (count % 2 === 0) {
             playerX.playMove(index);
-            turnStatusIndicator.textContent = `${playerO.symbol}'s turn`;
+            turnStatusIndicator.innerHTML = `${playerO.symbol}'s turn`;
             btn.innerHTML = `${playerX.symbol}`;
+            if (gameIsWon(playerX.symbol)) return;
         } else {
             playerO.playMove(index);
-            turnStatusIndicator.textContent = `${playerX.symbol}'s turn`;
             btn.innerHTML = `${playerO.symbol}`;
+            if (gameIsWon(playerO.symbol)) return;
+            turnStatusIndicator.innerHTML = `${playerX.symbol}'s turn`;
         }
     }
 
-    return { boardIsFull, gameIsWon, takeTurn, turnStatusIndicator };
+    const restartGame = () => {
+        const cells = Array.from(document.getElementsByClassName('cell'));
+        cells.forEach(cell => cell.innerHTML = '');
+        gameOver = false;
+        Gameboard.board = Array(Gameboard.boardSize).fill(null);
+        turnStatusIndicator.innerHTML = `${playerX.symbol}'s turn`;
+    }
+
+    const restartBtn = document.getElementById('restart');
+    restartBtn.addEventListener('click', restartGame);
+
+    return { boardIsFull, takeTurn, turnStatusIndicator };
 })();
 
 const playerX = Gameboard.createPlayer('X');
