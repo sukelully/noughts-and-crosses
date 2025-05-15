@@ -25,6 +25,7 @@ const Gameboard = (function () {
         console.log(display);
     };
 
+    // Instantiate player
     const createPlayer = (player) => {
         const symbol = (player === 'X' ? '&#10005;' : '&#11096;');
         const playMove = (index) => {
@@ -41,12 +42,16 @@ const Gameboard = (function () {
 const GameController = (function () {
     let gameOver = false;
     const turnStatusIndicator = document.getElementById('turn-status');
+    const gameStatusIndicator = document.getElementById('game-status');
 
+    // Board is full, game ended in a draw
     const boardIsFull = () => {
         gameOver = true;
+        gameStatusIndicator.innerHTML = `It's a draw!`
         return Gameboard.board.every(item => typeof item === 'string');
     };
 
+    // A win condition is active
     const gameIsWon = (symbol) => {
         const winConditions = [
             [0, 1, 2],
@@ -61,7 +66,8 @@ const GameController = (function () {
 
         for (const condition of winConditions) {
             if (condition.every(index => Gameboard.board[index] === symbol)) {
-                console.log(`\nPlayer ${symbol} has won the game!`);
+                turnStatusIndicator.innerHTML = '';
+                gameStatusIndicator.innerHTML =`${symbol} wins!`;
                 gameOver = true;
                 return true;
             }
@@ -100,6 +106,7 @@ const GameController = (function () {
         gameOver = false;
         Gameboard.board = Array(Gameboard.boardSize).fill(null);
         turnStatusIndicator.innerHTML = `${playerX.symbol}'s turn`;
+        gameStatusIndicator.innerHTML = '';
     }
 
     const restartBtn = document.getElementById('restart');
@@ -110,23 +117,3 @@ const GameController = (function () {
 
 const playerX = Gameboard.createPlayer('X');
 const playerO = Gameboard.createPlayer('O');
-
-// Game loop
-console.log('Welcome to Tic-Tac-Toe!\n');
-Gameboard.displayBoard();
-
-// while (true) {
-//     playerX.playMove();
-//     if (GameController.gameIsWon(playerX.symbol)) break;
-//     if (GameController.boardIsFull()) {
-//         console.log('\nIt\'s a draw!');
-//         break;
-//     }
-
-//     playerO.playMove();
-//     if (GameController.gameIsWon(playerO.symbol)) break;
-//     if (GameController.boardIsFull()) {
-//         console.log('\nIt\'s a draw!');
-//         break;
-//     }
-// }
