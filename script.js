@@ -59,7 +59,7 @@ const GameController = (function () {
         for (const condition of winConditions) {
             if (condition.every(index => Gameboard.board[index] === symbol)) {
                 turnStatusIndicator.innerHTML = '';
-                gameStatusIndicator.innerHTML =`${symbol} wins!`;
+                gameStatusIndicator.innerHTML = `${symbol} wins!`;
                 gameOver = true;
                 return true;
             }
@@ -70,16 +70,17 @@ const GameController = (function () {
     const takeTurn = (index, btn) => {
         const count = Gameboard.board.filter(item => item !== null).length;
 
-        if (Gameboard.board[index] !== null) {
-            console.error('Invalid choice: Cell is already occupied.');
-            return;
-        }
-        
-
         if (gameOver) {
             return;
         }
 
+        // Cell already occupied
+        if (Gameboard.board[index] !== null) {
+            console.log('Invalid choice: Cell is already occupied.');
+            return;
+        }
+
+        // Main game logic
         if (count % 2 === 0) {
             playerX.playMove(index);
             turnStatusIndicator.innerHTML = `${playerO.symbol}'s turn`;
@@ -114,7 +115,7 @@ const GameController = (function () {
     const restartBtn = document.getElementById('restart');
     restartBtn.addEventListener('click', restartGame);
 
-    return { boardIsFull, takeTurn, turnStatusIndicator };
+    return { takeTurn };
 })();
 
 const playerX = Gameboard.createPlayer('X');
