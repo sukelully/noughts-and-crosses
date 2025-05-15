@@ -14,29 +14,17 @@ const Gameboard = (function () {
         boardDiv.appendChild(btn);
     }
 
-    // Display board in console
-    const displayBoard = () => {
-        let display = '';
-        for (let i = 0; i < board.length; i++) {
-            display += board[i] || '-';
-            if ((i + 1) % 3 === 0) display += '\n';
-            else display += ' ';
-        }
-        console.log(display);
-    };
-
     // Instantiate player
     const createPlayer = (player) => {
         const symbol = (player === 'X' ? '&#10005;' : '&#11096;');
         const playMove = (index) => {
             Gameboard.board[index] = symbol;
-            Gameboard.displayBoard();
         };
 
         return { symbol, playMove };
     }
 
-    return { boardSize, board, displayBoard, createPlayer };
+    return { boardSize, board, createPlayer };
 })();
 
 const GameController = (function () {
