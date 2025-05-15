@@ -1,9 +1,7 @@
 const Gameboard = (function () {
-    let index;
     const boardSize = 9;
     const board = Array(boardSize).fill(null);
     const boardDiv = document.getElementById('gameboard');
-
 
     // Setup grid
     for (let i = 0; i < boardSize; i++) {
@@ -11,11 +9,12 @@ const Gameboard = (function () {
         btn.classList.add('cell');
         btn.dataset.index = i;
         btn.addEventListener('click', () => {
-            GameController.takeTurn(btn.dataset.index);
+            GameController.takeTurn(btn.dataset.index, btn);
         });
         boardDiv.appendChild(btn);
     }
-
+    
+    // Display board in console
     const displayBoard = () => {
         let display = '';
         for (let i = 0; i < board.length; i++) {
@@ -26,13 +25,11 @@ const Gameboard = (function () {
         console.log(display);
     };
 
-    const createPlayer = (symbol) => {
+    const createPlayer = (player) => {
+        const symbol = (player === 'X' ? '&#10005;' : '&#11096;');
         const playMove = (index) => {
             Gameboard.board[index] = symbol;
             Gameboard.displayBoard();
-            // console.log(Gameboard.board);
-            console.log(index);
-            console.log(symbol);
         };
     
         return { symbol, playMove };
@@ -42,6 +39,8 @@ const Gameboard = (function () {
 })();
 
 const GameController = (function () {
+    const turnStatusIndicator = document.getElementById('turn-status');
+
     const boardIsFull = () => {
         return Gameboard.board.every(item => typeof item === 'string');
     };
@@ -67,17 +66,21 @@ const GameController = (function () {
         return false;
     };
 
-    const takeTurn = (index) => {
+    const takeTurn = (index, btn) => {
         const count = Gameboard.board.filter(item => item !== null).length;
 
         if (count % 2 === 0) {
-            playerX.playMove(index)
+            playerX.playMove(index);
+            turnStatusIndicator.textContent = `${playerO.symbol}'s turn`;
+            btn.innerHTML = `${playerX.symbol}`;
         } else {
             playerO.playMove(index);
+            turnStatusIndicator.textContent = `${playerX.symbol}'s turn`;
+            btn.innerHTML = `${playerO.symbol}`;
         }
     }
 
-    return { boardIsFull, gameIsWon, takeTurn };
+    return { boardIsFull, gameIsWon, takeTurn, turnStatusIndicator };
 })();
 
 const playerX = Gameboard.createPlayer('X');
