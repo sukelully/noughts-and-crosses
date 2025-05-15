@@ -7,9 +7,8 @@ const Gameboard = (function () {
     for (let i = 0; i < boardSize; i++) {
         const btn = document.createElement('button');
         btn.classList.add('cell');
-        btn.dataset.index = i;
         btn.addEventListener('click', () => {
-            GameController.takeTurn(btn.dataset.index, btn);
+            GameController.takeTurn(i, btn);
         });
         boardDiv.appendChild(btn);
     }
@@ -32,12 +31,17 @@ const GameController = (function () {
     const turnStatusIndicator = document.getElementById('turn-status');
     const gameStatusIndicator = document.getElementById('game-status');
 
-    // Board is full, game ended in a draw
+    // Board is full
     const boardIsFull = () => {
-        gameOver = true;
-        gameStatusIndicator.innerHTML = `It's a draw!`
         return Gameboard.board.every(item => typeof item === 'string');
     };
+
+    // Game is a draw, display appropriately
+    const draw = () => {
+        turnStatusIndicator.innerHTML = '';
+        gameStatusIndicator.innerHTML = `It's a draw!`
+        gameOver = true;
+    }
 
     // A win condition is active
     const gameIsWon = (symbol) => {
@@ -70,6 +74,7 @@ const GameController = (function () {
             console.error('Invalid choice: Cell is already occupied.');
             return;
         }
+        
 
         if (gameOver) {
             return;
@@ -80,14 +85,23 @@ const GameController = (function () {
             turnStatusIndicator.innerHTML = `${playerO.symbol}'s turn`;
             btn.innerHTML = `${playerX.symbol}`;
             if (gameIsWon(playerX.symbol)) return;
+            if (boardIsFull()) {
+                draw();
+                return;
+            }
         } else {
             playerO.playMove(index);
             btn.innerHTML = `${playerO.symbol}`;
             if (gameIsWon(playerO.symbol)) return;
+            if (boardIsFull()) {
+                draw();
+                return;
+            }
             turnStatusIndicator.innerHTML = `${playerX.symbol}'s turn`;
         }
     }
 
+    // Restart board and html elements for new game
     const restartGame = () => {
         const cells = Array.from(document.getElementsByClassName('cell'));
         cells.forEach(cell => cell.innerHTML = '');

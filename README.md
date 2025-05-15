@@ -1,3 +1,3 @@
-# tic-tac-toe
+# noughts-and-crosses
 
 You know how to play!
